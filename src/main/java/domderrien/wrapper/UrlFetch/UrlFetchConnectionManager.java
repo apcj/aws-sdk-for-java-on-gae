@@ -21,7 +21,9 @@ public class UrlFetchConnectionManager implements HttpConnectionManager {
 	private HttpConnection connection;
 	
 	public void closeIdleConnections(long timeout) {
-		throw new RuntimeException("closeIdleConnections(long)");
+		/* TODO: Log the use of this unsupported call */
+		
+		//throw new RuntimeException("closeIdleConnections(long)");
 	}
 
 	public HttpConnection getConnection(HostConfiguration hostConfiguration) {

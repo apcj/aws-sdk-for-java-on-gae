@@ -26,7 +26,8 @@ import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
+//import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
+import domderrien.wrapper.UrlFetch.UrlFetchConnectionManager;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.NoHttpResponseException;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
@@ -487,7 +488,8 @@ public class HttpClient {
         }
 
         /* Set connection manager */
-        MultiThreadedHttpConnectionManager connectionManager = new MultiThreadedHttpConnectionManager();
+        //MultiThreadedHttpConnectionManager connectionManager = new MultiThreadedHttpConnectionManager();
+        UrlFetchConnectionManager connectionManager = new UrlFetchConnectionManager();
         connectionManager.setParams(connectionManagerParams);
 
         httpClient = new org.apache.commons.httpclient.HttpClient(

@@ -1,0 +1,48 @@
+<project name="aws-java-sdk" default="build" basedir=".">
+
+    <property name="appname" value="aws-java-sdk" />
+    <property name="appversion" value="1.0.004" />
+
+    <property name="third-party.root" location="${basedir}/third-party" />
+    <property name="src.dir" location="${basedir}/src/main/java" />
+    <property name="resources.dir" location="${basedir}/src/main/resources" />
+    <property name="build.dir" location="${basedir}/build" />
+
+    <path id="build.path">
+        <pathelement location="${third-party.root}/appengine-1.3.1/appengine-api-1.0-sdk-1.3.1.jar" />
+        <pathelement location="${third-party.root}/domderrien-1.0.6/domderrien-1.0.6.jar" />
+        <pathelement location="${third-party.root}/commons-codec-1.3/commons-codec-1.3.jar" />
+        <pathelement location="${third-party.root}/commons-httpclient-3.0.1/commons-httpclient-3.0.1.jar" />
+        <pathelement location="${third-party.root}/commons-logging-1.1.1/commons-logging-1.1.1.jar" />
+        <pathelement location="${third-party.root}/jackson-1.4/jackson-core-asl-1.4.3.jar" />
+        <pathelement location="${third-party.root}/saxonhe-9.0.2j/saxonhe9.jar" />
+        <pathelement location="${third-party.root}/stax-api-1.0.1/stax-api-1.0.1.jar" />
+        <pathelement location="${third-party.root}/stax-ri-1.2.0/stax-1.2.0.jar" />
+    </path>
+
+    <target name="compile">
+        <mkdir dir="${build.dir}" />
+        <javac srcdir="${src.dir}"
+            destdir="${build.dir}"
+            debug="on"
+            classpathref="build.path"
+        />
+    </target>
+
+    <target name="jar" depends="compile">
+        <copy todir="${build.dir}">
+            <fileset dir="${resources.dir}" />
+        </copy>
+
+        <jar jarfile="${build.dir}/${appname}-${appversion}.jar">
+            <fileset dir="${build.dir}" />
+        </jar>
+    </target>
+
+    <target name="build" depends="jar" />
+
+    <target name="clean">
+        <delete dir="${build.dir}" />
+    </target>
+
+</project>

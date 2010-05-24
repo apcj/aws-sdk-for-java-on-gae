@@ -63,6 +63,7 @@ public class UrlFetchHttpConnection extends HttpConnection {
 
 	private HTTPResponse getResponse() throws MalformedURLException, IOException {
 		if (_response == null) {
+			System.out.println("_response == null");
 			// Get the response from the remote service
 			_response = urlFS.fetch(getRequest());
 			// Rebuild stream of HTTP headers (except the HTTP status retrieved from readLine(String) method)
@@ -70,14 +71,18 @@ public class UrlFetchHttpConnection extends HttpConnection {
 			for (HTTPHeader header: _response.getHeaders()) {
 				buffer.append(header.getName()).append(SEPARATOR).append(header.getValue()).append(NEW_LINE);
 			}
-			buffer.append("Content-Length: ").append(_response.getContent().length).append(NEW_LINE);
 			buffer.append(NEW_LINE);
 			// Rebuild stream of HTTP content (chunked-encoded)
-			buffer.append(Integer.toString(_response.getContent().length, 16)).append(";chunk size").append(NEW_LINE);
+			buffer.append(Integer.toString(_response.getContent().length, 16)).append(NEW_LINE);
 			buffer.append(new String(_response.getContent())).append(NEW_LINE);
-			buffer.append("0;").append(NEW_LINE);
+			buffer.append("0").append(NEW_LINE);
 			_responseBody.resetActualContent(buffer.toString());
+			System.out.println(buffer.toString());
+			System.out.println("=====");
+			System.out.println(_responseBody);
 		}
+		System.out.println("Returning _response");
+		System.out.println(_responseBody);
 		return _response;
 	}
 

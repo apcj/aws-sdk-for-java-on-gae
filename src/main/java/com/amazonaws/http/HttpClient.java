@@ -22,13 +22,10 @@ import java.util.Map.Entry;
 
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HostConfiguration;
-import org.apache.commons.httpclient.HttpConnectionManager;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpStatus;
-//import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
-import domderrien.wrapper.UrlFetch.UrlFetchConnectionManager;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.NoHttpResponseException;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
@@ -51,6 +48,8 @@ import com.amazonaws.ResponseMetadata;
 import com.amazonaws.util.CountingInputStream;
 import com.amazonaws.util.HttpUtils;
 import com.amazonaws.util.VersionInfoUtils;
+
+import domderrien.wrapper.UrlFetch.UrlFetchConnectionManager;
 
 public class HttpClient {
 
@@ -227,10 +226,9 @@ public class HttpClient {
      * Once a client has been shutdown, it cannot be used to make more requests.
      */
     public void shutdown() {
-        HttpConnectionManager connectionManager = httpClient.getHttpConnectionManager();
-        if (connectionManager instanceof MultiThreadedHttpConnectionManager) {
-            ((MultiThreadedHttpConnectionManager)connectionManager).shutdown();
-        }
+    	/** WARNING: The UrlFetchConnectionManager does not support shutdown, since
+    	 * it does not really hold any open resources. There is no need for this method.
+    	 */
     }
 
     /**

@@ -1,13 +1,14 @@
 <project name="aws-java-sdk" default="build" basedir=".">
 
-    <property name="appname" value="aws-java-sdk" />
-    <property name="appversion" value="1.0.004" />
-
     <property name="third-party.root" location="${basedir}/third-party" />
     <property name="src.dir" location="${basedir}/src/main/java" />
     <property name="resources.dir" location="${basedir}/src/main/resources" />
     <property name="build.dir" location="${basedir}/build" />
 
+    <property name="app.name" value="aws-java-sdk" />
+    <!-- Read version number -->
+    <property file="${resources.dir}/com/amazonaws/sdk/versionInfo.properties" />
+    
     <path id="build.path">
     	<pathelement location="${third-party.root}/appengine-1.3.4/appengine-api-1.0-sdk-1.3.4.jar" />
         <pathelement location="${third-party.root}/domderrien-1.0.6/domderrien-1.0.6.jar" />
@@ -33,8 +34,8 @@
         <copy todir="${build.dir}">
             <fileset dir="${resources.dir}" />
         </copy>
-        <delete file="${build.dir}/${appname}-${appversion}.jar" />
-        <jar jarfile="${build.dir}/${appname}-${appversion}.jar">
+        <delete file="${build.dir}/${app.name}-${version}.jar" />
+        <jar jarfile="${build.dir}/${app.name}-${version}.jar">
             <fileset dir="${build.dir}" />
         </jar>
     </target>

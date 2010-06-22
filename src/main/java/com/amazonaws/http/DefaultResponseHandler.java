@@ -24,6 +24,8 @@ import com.amazonaws.transform.ResponseMetadataUnmarshaller;
 import com.amazonaws.transform.Unmarshaller;
 import com.amazonaws.util.XpathUtils;
 
+import domderrien.wrapper.UrlFetch.UrlFetchHttpConnection;
+
 /**
  * Default implementation of HttpResponseHandler that handles a successful
  * response from an AWS service and unmarshalls the result using an Xpath
@@ -99,7 +101,7 @@ public class DefaultResponseHandler<T> implements HttpResponseHandler<ResponseMe
      */
     public ResponseMetadata<T> handle(HttpResponse response) throws Exception {
         log.trace("Parsing service response XML into a DOM");
-        Document document = XpathUtils.documentFrom(response.getContent());
+        Document document = XpathUtils.documentFrom(UrlFetchHttpConnection.XML_RESPONSE);
 
         log.trace("Parsing data from the DOM");
         ResponseMetadataUnmarshaller<T> responseMetadataUnmarshaller = new ResponseMetadataUnmarshaller<T>();

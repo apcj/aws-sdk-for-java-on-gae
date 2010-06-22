@@ -1,11 +1,11 @@
-<project name="aws-java-sdk" default="build" basedir=".">
+<project name="gae-aws-sdk" default="build" basedir=".">
 
     <property name="third-party.root" location="${basedir}/third-party" />
     <property name="src.dir" location="${basedir}/src/main/java" />
     <property name="resources.dir" location="${basedir}/src/main/resources" />
     <property name="build.dir" location="${basedir}/build" />
 
-    <property name="app.name" value="aws-java-sdk" />
+    <property name="app.name" value="gae-aws-sdk" />
     <!-- Read version number -->
     <property file="${resources.dir}/com/amazonaws/sdk/versionInfo.properties" />
     
@@ -36,7 +36,9 @@
         </copy>
         <delete file="${build.dir}/${app.name}-${version}.jar" />
         <jar jarfile="${build.dir}/${app.name}-${version}.jar">
-            <fileset dir="${build.dir}" />
+            <fileset dir="${build.dir}">
+                <exclude name="com/amazonaws/services/s3/**" />
+            </fileset>
         </jar>
     </target>
 

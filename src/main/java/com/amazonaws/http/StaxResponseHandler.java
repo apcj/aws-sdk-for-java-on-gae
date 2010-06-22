@@ -14,6 +14,8 @@
  */
 package com.amazonaws.http;
 
+import java.io.ByteArrayInputStream;
+
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 
@@ -24,6 +26,8 @@ import com.amazonaws.ResponseMetadata;
 import com.amazonaws.transform.StaxUnmarshallerContext;
 import com.amazonaws.transform.Unmarshaller;
 import com.amazonaws.transform.VoidStaxUnmarshaller;
+
+import domderrien.wrapper.UrlFetch.UrlFetchHttpConnection;
 
 /**
  * Default implementation of HttpResponseHandler that handles a successful
@@ -118,8 +122,9 @@ public class StaxResponseHandler<T> implements HttpResponseHandler<ResponseMetad
         if (requestIdPath != null) {
         }
 
-        log.trace("Parsing service response XML");
-        XMLEventReader eventReader = xmlInputFactory.createXMLEventReader(response.getContent());
+        XMLEventReader eventReader = xmlInputFactory.createXMLEventReader(
+        		new ByteArrayInputStream(UrlFetchHttpConnection.XML_RESPONSE.getBytes("UTF-8")),
+        		"utf-8");
         try {
             ResponseMetadata<T> responseMetadata = new ResponseMetadata<T>();
             StaxUnmarshallerContext unmarshallerContext = new StaxUnmarshallerContext(eventReader, responseMetadata);

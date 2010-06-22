@@ -37,6 +37,8 @@ import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 
 public class UrlFetchHttpConnection extends HttpConnection {
 
+	public static String XML_RESPONSE = "SHOULD NOT BE SEEN EVER";
+	
 	private static URLFetchService urlFS = URLFetchServiceFactory.getURLFetchService();
 
 	private HostConfiguration hostConfiguration;
@@ -44,7 +46,6 @@ public class UrlFetchHttpConnection extends HttpConnection {
 	private HTTPResponse _response;
 	private MockOutputStream _requestBody = new MockOutputStream();
 	private MockInputStream _responseBody = new MockInputStream();
-
 	
 	private HTTPRequest getRequest() throws MalformedURLException {
 		if (_request == null) {
@@ -63,7 +64,6 @@ public class UrlFetchHttpConnection extends HttpConnection {
 
 	private HTTPResponse getResponse() throws MalformedURLException, IOException {
 		if (_response == null) {
-			System.out.println("_response == null");
 			// Get the response from the remote service
 			_response = urlFS.fetch(getRequest());
 			// Rebuild stream of HTTP headers (except the HTTP status retrieved from readLine(String) method)
@@ -76,13 +76,11 @@ public class UrlFetchHttpConnection extends HttpConnection {
 			buffer.append(Integer.toString(_response.getContent().length, 16)).append(NEW_LINE);
 			buffer.append(new String(_response.getContent())).append(NEW_LINE);
 			buffer.append("0").append(NEW_LINE);
+			XML_RESPONSE = new String(_response.getContent());
+			
 			_responseBody.resetActualContent(buffer.toString());
-			System.out.println(buffer.toString());
-			System.out.println("=====");
-			System.out.println(_responseBody);
 		}
-		System.out.println("Returning _response");
-		System.out.println(_responseBody);
+		
 		return _response;
 	}
 

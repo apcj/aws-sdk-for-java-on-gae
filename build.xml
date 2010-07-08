@@ -16,7 +16,6 @@
         <pathelement location="${third-party.root}/commons-httpclient-3.0.1/commons-httpclient-3.0.1.jar" />
         <pathelement location="${third-party.root}/commons-logging-1.1.1/commons-logging-1.1.1.jar" />
         <pathelement location="${third-party.root}/jackson-1.4/jackson-core-asl-1.4.3.jar" />
-        <pathelement location="${third-party.root}/saxonhe-9.0.2j/saxonhe9.jar" />
         <pathelement location="${third-party.root}/stax-api-1.0.1/stax-api-1.0.1.jar" />
         <pathelement location="${third-party.root}/stax-ri-1.2.0/stax-1.2.0.jar" />
     </path>

@@ -8,7 +8,7 @@
   <!-- Servlets -->
   <servlet>
     <servlet-name>greetServlet</servlet-name>
-    <servlet-class>com.amazonaws.gae.test.server.GreetingServiceImpl</servlet-class>
+    <servlet-class>com.amazonaws.gae.test.server.TestingServiceImpl</servlet-class>
   </servlet>
   
   <servlet-mapping>

@@ -32,30 +32,33 @@ public class Test implements EntryPoint {
 	/**
 	 * Create a remote service proxy to talk to the server-side Greeting service.
 	 */
-	private final GreetingServiceAsync greetingService = GWT
-			.create(GreetingService.class);
+	private final TestingServiceAsync testingService = GWT
+			.create(TestingService.class);
 
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		final Button sendButton = new Button("Send");
-		final TextBox nameField = new TextBox();
-		nameField.setText("GWT User");
+		final Button testButton = new Button("Begin Testing");
+		final TextBox accessKeyField = new TextBox();
+		accessKeyField.setText("Access Key");
+		final TextBox secretKeyField = new TextBox();
+		secretKeyField.setText("Secret Key");
 		final Label errorLabel = new Label();
 
 		// We can add style names to widgets
-		sendButton.addStyleName("sendButton");
+		testButton.addStyleName("sendButton");
 
 		// Add the nameField and sendButton to the RootPanel
 		// Use RootPanel.get() to get the entire body element
-		RootPanel.get("nameFieldContainer").add(nameField);
-		RootPanel.get("sendButtonContainer").add(sendButton);
+		RootPanel.get("nameFieldContainer").add(accessKeyField);
+		RootPanel.get("nameFieldContainer").add(secretKeyField);
+		RootPanel.get("sendButtonContainer").add(testButton);
 		RootPanel.get("errorLabelContainer").add(errorLabel);
 
 		// Focus the cursor on the name field when the app loads
-		nameField.setFocus(true);
-		nameField.selectAll();
+		accessKeyField.setFocus(true);
+		accessKeyField.selectAll();
 
 		// Create the popup dialog box
 		final DialogBox dialogBox = new DialogBox();
@@ -68,9 +71,9 @@ public class Test implements EntryPoint {
 		final HTML serverResponseLabel = new HTML();
 		VerticalPanel dialogVPanel = new VerticalPanel();
 		dialogVPanel.addStyleName("dialogVPanel");
-		dialogVPanel.add(new HTML("<b>Sending name to the server:</b>"));
+		dialogVPanel.add(new HTML("<b>Sending keys to the server:</b>"));
 		dialogVPanel.add(textToServerLabel);
-		dialogVPanel.add(new HTML("<br><b>Server replies:</b>"));
+		dialogVPanel.add(new HTML("<br><b>Results:</b>"));
 		dialogVPanel.add(serverResponseLabel);
 		dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
 		dialogVPanel.add(closeButton);
@@ -80,8 +83,8 @@ public class Test implements EntryPoint {
 		closeButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				dialogBox.hide();
-				sendButton.setEnabled(true);
-				sendButton.setFocus(true);
+				testButton.setEnabled(true);
+				testButton.setFocus(true);
 			}
 		});
 
@@ -91,7 +94,7 @@ public class Test implements EntryPoint {
 			 * Fired when the user clicks on the sendButton.
 			 */
 			public void onClick(ClickEvent event) {
-				sendNameToServer();
+				sendKeysToServer();
 			}
 
 			/**
@@ -99,27 +102,28 @@ public class Test implements EntryPoint {
 			 */
 			public void onKeyUp(KeyUpEvent event) {
 				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-					sendNameToServer();
+					sendKeysToServer();
 				}
 			}
 
 			/**
 			 * Send the name from the nameField to the server and wait for a response.
 			 */
-			private void sendNameToServer() {
+			private void sendKeysToServer() {
 				// First, we validate the input.
 				errorLabel.setText("");
-				String textToServer = nameField.getText();
-				if (!FieldVerifier.isValidName(textToServer)) {
+				String accessKey = accessKeyField.getText();
+				String secretKey = secretKeyField.getText();
+				if (!FieldVerifier.isValidAccessKey(accessKey)) {
 					errorLabel.setText("Please enter at least four characters");
 					return;
 				}
 
 				// Then, we send the input to the server.
-				sendButton.setEnabled(false);
-				textToServerLabel.setText(textToServer);
+				testButton.setEnabled(false);
+				textToServerLabel.setText("Access Key: " + accessKey + " || " + "Secret Key: " + secretKey);
 				serverResponseLabel.setText("");
-				greetingService.greetServer(textToServer,
+				testingService.runTests(accessKey, secretKey,
 						new AsyncCallback<String>() {
 							public void onFailure(Throwable caught) {
 								// Show the RPC error message to the user
@@ -133,7 +137,7 @@ public class Test implements EntryPoint {
 							}
 
 							public void onSuccess(String result) {
-								dialogBox.setText("Remote Procedure Call");
+								dialogBox.setText("Test Results");
 								serverResponseLabel
 										.removeStyleName("serverResponseLabelError");
 								serverResponseLabel.setHTML(result);
@@ -146,7 +150,7 @@ public class Test implements EntryPoint {
 
 		// Add a handler to send the name to the server
 		MyHandler handler = new MyHandler();
-		sendButton.addClickHandler(handler);
-		nameField.addKeyUpHandler(handler);
+		testButton.addClickHandler(handler);
+		accessKeyField.addKeyUpHandler(handler);
 	}
 }

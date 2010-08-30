@@ -1,6 +1,7 @@
 package com.amazonaws.gae.test.client;
 
 import com.amazonaws.gae.test.shared.FieldVerifier;
+import com.amazonaws.gae.test.shared.awsunit.AWSTestResultSet;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -124,7 +125,7 @@ public class Test implements EntryPoint {
 				textToServerLabel.setText("Access Key: " + accessKey + " || " + "Secret Key: " + secretKey);
 				serverResponseLabel.setText("");
 				testingService.runTests(accessKey, secretKey,
-						new AsyncCallback<String>() {
+						new AsyncCallback<AWSTestResultSet>() {
 							public void onFailure(Throwable caught) {
 								// Show the RPC error message to the user
 								dialogBox
@@ -136,11 +137,11 @@ public class Test implements EntryPoint {
 								closeButton.setFocus(true);
 							}
 
-							public void onSuccess(String result) {
+							public void onSuccess(AWSTestResultSet result) {
 								dialogBox.setText("Test Results");
 								serverResponseLabel
 										.removeStyleName("serverResponseLabelError");
-								serverResponseLabel.setHTML(result);
+								serverResponseLabel.setHTML("Passed Tests: " + result.getNumberOfTests());
 								dialogBox.center();
 								closeButton.setFocus(true);
 							}

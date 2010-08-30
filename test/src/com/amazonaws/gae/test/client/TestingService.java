@@ -1,5 +1,6 @@
 package com.amazonaws.gae.test.client;
 
+import com.amazonaws.gae.test.shared.awsunit.AWSTestResultSet;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -8,5 +9,5 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  */
 @RemoteServiceRelativePath("greet")
 public interface TestingService extends RemoteService {
-	String runTests(String accessKey, String secretKey) throws IllegalArgumentException;
+	AWSTestResultSet runTests(String accessKey, String secretKey) throws IllegalArgumentException;
 }

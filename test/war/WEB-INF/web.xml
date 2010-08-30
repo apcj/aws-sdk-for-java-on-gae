@@ -7,13 +7,23 @@
   
   <!-- Servlets -->
   <servlet>
-    <servlet-name>greetServlet</servlet-name>
+    <servlet-name>testingServlet</servlet-name>
     <servlet-class>com.amazonaws.gae.test.server.TestingServiceImpl</servlet-class>
   </servlet>
   
+  <servlet>
+    <servlet-name>testListingServlet</servlet-name>
+    <servlet-class>com.amazonaws.gae.test.server.TestListingServiceImpl</servlet-class>
+  </servlet>
+  
   <servlet-mapping>
-    <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/test/greet</url-pattern>
+    <servlet-name>testingServlet</servlet-name>
+    <url-pattern>/test/run</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>testListingServlet</servlet-name>
+    <url-pattern>/test/list</url-pattern>
   </servlet-mapping>
   
   <!-- Default page to serve -->

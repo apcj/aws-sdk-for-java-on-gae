@@ -1,6 +1,10 @@
 package com.amazonaws.gae.test.client;
 
+import java.util.List;
+import java.util.Set;
+
 import com.amazonaws.gae.test.shared.FieldVerifier;
+import com.amazonaws.gae.test.shared.awsunit.AWSTestResult;
 import com.amazonaws.gae.test.shared.awsunit.AWSTestResultSet;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -31,21 +35,37 @@ public class Test implements EntryPoint {
 			+ "connection and try again.";
 
 	/**
-	 * Create a remote service proxy to talk to the server-side Greeting service.
+	 * Create a remote service proxy to talk to the server-side Testing service.
 	 */
 	private final TestingServiceAsync testingService = GWT
 			.create(TestingService.class);
+	
+	/**
+	 * Create a remote service proxy to talk to the server-side TestListing service.
+	 */
+	private final TestListingServiceAsync testListingService = GWT
+			.create(TestListingService.class);
 
+	Button testButton;
+	TextBox accessKeyField;
+	TextBox secretKeyField;
+	Label errorLabel;
+	DialogBox dialogBox;
+	Button closeButton;
+	Label textToServerLabel;
+	HTML serverResponseLabel;
+
+	
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
-		final Button testButton = new Button("Begin Testing");
-		final TextBox accessKeyField = new TextBox();
+		testButton = new Button("Begin Testing");
+		accessKeyField = new TextBox();
 		accessKeyField.setText("Access Key");
-		final TextBox secretKeyField = new TextBox();
+		secretKeyField = new TextBox();
 		secretKeyField.setText("Secret Key");
-		final Label errorLabel = new Label();
+		errorLabel = new Label();
 
 		// We can add style names to widgets
 		testButton.addStyleName("sendButton");
@@ -62,14 +82,14 @@ public class Test implements EntryPoint {
 		accessKeyField.selectAll();
 
 		// Create the popup dialog box
-		final DialogBox dialogBox = new DialogBox();
+		dialogBox = new DialogBox();
 		dialogBox.setText("Remote Procedure Call");
 		dialogBox.setAnimationEnabled(true);
-		final Button closeButton = new Button("Close");
+		closeButton = new Button("Close");
 		// We can set the id of a widget by accessing its Element
 		closeButton.getElement().setId("closeButton");
-		final Label textToServerLabel = new Label();
-		final HTML serverResponseLabel = new HTML();
+		textToServerLabel = new Label();
+		serverResponseLabel = new HTML();
 		VerticalPanel dialogVPanel = new VerticalPanel();
 		dialogVPanel.addStyleName("dialogVPanel");
 		dialogVPanel.add(new HTML("<b>Sending keys to the server:</b>"));
@@ -124,6 +144,9 @@ public class Test implements EntryPoint {
 				testButton.setEnabled(false);
 				textToServerLabel.setText("Access Key: " + accessKey + " || " + "Secret Key: " + secretKey);
 				serverResponseLabel.setText("");
+				
+				testListingService.listTestSuites(new ListTestSuitesAsyncCallback());
+				/*
 				testingService.runTests(accessKey, secretKey,
 						new AsyncCallback<AWSTestResultSet>() {
 							public void onFailure(Throwable caught) {
@@ -146,6 +169,8 @@ public class Test implements EntryPoint {
 								closeButton.setFocus(true);
 							}
 						});
+				*/
+				
 			}
 		}
 
@@ -153,5 +178,98 @@ public class Test implements EntryPoint {
 		MyHandler handler = new MyHandler();
 		testButton.addClickHandler(handler);
 		accessKeyField.addKeyUpHandler(handler);
+	}
+	
+	class ListTestSuitesAsyncCallback implements AsyncCallback<Set<String>> {
+		@Override
+		public void onFailure(Throwable caught) {
+			// Show the RPC error message to the user
+			dialogBox.setText("Remote Procedure Call - Failure");
+			serverResponseLabel.addStyleName("serverResponseLabelError");
+			serverResponseLabel.setHTML(SERVER_ERROR);
+			dialogBox.center();
+			closeButton.setFocus(true);
+		}
+
+		@Override
+		public void onSuccess(Set<String> result) {
+			dialogBox.setText("Test Results:");
+			serverResponseLabel.removeStyleName("serverResponseLabelError");
+			String testSuiteList = "";
+			for (String testSuiteName : result) {
+				testSuiteList += testSuiteName + "<br>";
+			}
+			serverResponseLabel.setHTML(testSuiteList);
+			dialogBox.center();
+			closeButton.setFocus(true);			
+			
+			for (String testSuiteName : result) {
+				testListingService.listTests(testSuiteName, new ListTestsAsyncCallback(testSuiteName));
+			}
+		}
+	}
+	
+	class ListTestsAsyncCallback implements AsyncCallback<List<String>> {
+		private String testSuiteName;
+		public ListTestsAsyncCallback(String testSuiteName) {
+			this.testSuiteName = testSuiteName;
+		}
+		@Override
+		public void onFailure(Throwable caught) {
+			// Show the RPC error message to the user
+			dialogBox.setText("Remote Procedure Call - Failure");
+			serverResponseLabel.addStyleName("serverResponseLabelError");
+			serverResponseLabel.setHTML(SERVER_ERROR);
+			dialogBox.center();
+			closeButton.setFocus(true);
+		}
+
+		@Override
+		public void onSuccess(List<String> result) {
+			String testList = "";
+			for (String testName : result) {
+				testList += testName + "<br>";
+			}
+			serverResponseLabel.setHTML(serverResponseLabel.getHTML() + testList);
+			
+			for (String testName : result) {
+				testingService.runTest(testSuiteName, testName, accessKeyField.getText(), secretKeyField.getText(), new RunTestAsyncCallback());
+			}
+		}
+	}
+	
+	class RunTestAsyncCallback implements AsyncCallback<AWSTestResult> {
+
+		@Override
+		public void onFailure(Throwable caught) {
+			// Show the RPC error message to the user
+			dialogBox.setText("Remote Procedure Call - Failure");
+			serverResponseLabel.addStyleName("serverResponseLabelError");
+			serverResponseLabel.setHTML(SERVER_ERROR);
+			dialogBox.center();
+			closeButton.setFocus(true);
+		}
+
+		@Override
+		public void onSuccess(AWSTestResult result) {
+			serverResponseLabel.setHTML(serverResponseLabel.getHTML() + "SUCCESS<br>");
+		}
+		
+	}
+	
+	class RunTestsAsyncCallback implements AsyncCallback<AWSTestResultSet> {
+		@Override
+		public void onFailure(Throwable caught) {
+			// Show the RPC error message to the user
+			dialogBox.setText("Remote Procedure Call - Failure");
+			serverResponseLabel.addStyleName("serverResponseLabelError");
+			serverResponseLabel.setHTML(SERVER_ERROR);
+			dialogBox.center();
+			closeButton.setFocus(true);
+		}
+
+		@Override
+		public void onSuccess(AWSTestResultSet result) {
+		}
 	}
 }

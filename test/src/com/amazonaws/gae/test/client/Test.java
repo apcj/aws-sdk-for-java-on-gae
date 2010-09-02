@@ -145,32 +145,7 @@ public class Test implements EntryPoint {
 				textToServerLabel.setText("Access Key: " + accessKey + " || " + "Secret Key: " + secretKey);
 				serverResponseLabel.setText("");
 				
-				testListingService.listTestSuites(new ListTestSuitesAsyncCallback());
-				/*
-				testingService.runTests(accessKey, secretKey,
-						new AsyncCallback<AWSTestResultSet>() {
-							public void onFailure(Throwable caught) {
-								// Show the RPC error message to the user
-								dialogBox
-										.setText("Remote Procedure Call - Failure");
-								serverResponseLabel
-										.addStyleName("serverResponseLabelError");
-								serverResponseLabel.setHTML(SERVER_ERROR);
-								dialogBox.center();
-								closeButton.setFocus(true);
-							}
-
-							public void onSuccess(AWSTestResultSet result) {
-								dialogBox.setText("Test Results");
-								serverResponseLabel
-										.removeStyleName("serverResponseLabelError");
-								serverResponseLabel.setHTML("Passed Tests: " + result.getNumberOfTests());
-								dialogBox.center();
-								closeButton.setFocus(true);
-							}
-						});
-				*/
-				
+				testListingService.listTestSuites(new ListTestSuitesAsyncCallback());				
 			}
 		}
 

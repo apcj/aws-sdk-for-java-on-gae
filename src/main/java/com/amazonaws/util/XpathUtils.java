@@ -41,6 +41,8 @@ import org.xml.sax.SAXException;
 
 import com.amazonaws.AmazonClientException;
 
+import domderrien.wrapper.UrlFetch.UrlFetchHttpConnection;
+
 /**
  * Utility methods for extracting data from XML documents using Xpath
  * expressions.
@@ -62,8 +64,8 @@ public class XpathUtils {
 
     public static Document documentFrom(InputStream is)
             throws SAXException, IOException, ParserConfigurationException {
-
-        is = new NamespaceRemovingInputStream(is);
+    	InputStream errorStream = new ByteArrayInputStream(UrlFetchHttpConnection.XML_RESPONSE.getBytes("UTF-8"));
+        is = new NamespaceRemovingInputStream(errorStream);
         Document doc = factory.newDocumentBuilder().parse(is);
         is.close();
         return doc;

@@ -24,9 +24,9 @@ public class AmazonSimpleDBTestSuite extends AWSTestSuite {
 		CreateDomainTest createDomainTest = new CreateDomainTest();
 		DeleteDomainTest deleteDomainTest = new DeleteDomainTest();
 		
-		tests.put(listDomainsTest.getName(), listDomainsTest);
-		tests.put(createDomainTest.getName(), createDomainTest);
-		tests.put(deleteDomainTest.getName(), deleteDomainTest);
+		tests.add(listDomainsTest);
+		tests.add(createDomainTest);
+		tests.add(deleteDomainTest);
 		
 		singleton = this;
 	}

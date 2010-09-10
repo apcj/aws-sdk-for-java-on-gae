@@ -1,6 +1,9 @@
 package com.amazonaws.gae.test.client;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.amazonaws.gae.test.shared.FieldVerifier;
@@ -16,6 +19,7 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -54,6 +58,10 @@ public class Test implements EntryPoint {
 	Button closeButton;
 	Label textToServerLabel;
 	HTML serverResponseLabel;
+	VerticalPanel dialogVPanel;
+	Map<String, Grid> resultsGrids;
+	volatile int testsReturned = 0;
+	volatile int totalTests = 0;
 
 	
 	/**
@@ -66,6 +74,7 @@ public class Test implements EntryPoint {
 		secretKeyField = new TextBox();
 		secretKeyField.setText("Secret Key");
 		errorLabel = new Label();
+		resultsGrids = new HashMap<String, Grid>();
 
 		// We can add style names to widgets
 		testButton.addStyleName("sendButton");
@@ -90,14 +99,13 @@ public class Test implements EntryPoint {
 		closeButton.getElement().setId("closeButton");
 		textToServerLabel = new Label();
 		serverResponseLabel = new HTML();
-		VerticalPanel dialogVPanel = new VerticalPanel();
+		dialogVPanel = new VerticalPanel();
 		dialogVPanel.addStyleName("dialogVPanel");
 		dialogVPanel.add(new HTML("<b>Sending keys to the server:</b>"));
 		dialogVPanel.add(textToServerLabel);
 		dialogVPanel.add(new HTML("<br><b>Results:</b>"));
 		dialogVPanel.add(serverResponseLabel);
 		dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
-		dialogVPanel.add(closeButton);
 		dialogBox.setWidget(dialogVPanel);
 
 		// Add a handler to close the DialogBox
@@ -145,7 +153,7 @@ public class Test implements EntryPoint {
 				textToServerLabel.setText("Access Key: " + accessKey + " || " + "Secret Key: " + secretKey);
 				serverResponseLabel.setText("");
 				
-				testListingService.listTestSuites(new ListTestSuitesAsyncCallback());				
+				testListingService.listTestSuites(new ListTestSuitesAsyncCallback());
 			}
 		}
 
@@ -170,13 +178,7 @@ public class Test implements EntryPoint {
 		public void onSuccess(Set<String> result) {
 			dialogBox.setText("Test Results:");
 			serverResponseLabel.removeStyleName("serverResponseLabelError");
-			String testSuiteList = "";
-			for (String testSuiteName : result) {
-				testSuiteList += testSuiteName + "<br>";
-			}
-			serverResponseLabel.setHTML(testSuiteList);
 			dialogBox.center();
-			closeButton.setFocus(true);			
 			
 			for (String testSuiteName : result) {
 				testListingService.listTests(testSuiteName, new ListTestsAsyncCallback(testSuiteName));
@@ -201,15 +203,17 @@ public class Test implements EntryPoint {
 
 		@Override
 		public void onSuccess(List<String> result) {
-			String testList = "";
-			for (String testName : result) {
-				testList += testName + "<br>";
-			}
-			serverResponseLabel.setHTML(serverResponseLabel.getHTML() + testList);
-			
-			for (String testName : result) {
-				testingService.runTest(testSuiteName, testName, accessKeyField.getText(), secretKeyField.getText(), new RunTestAsyncCallback());
-			}
+			totalTests += result.size();
+			Grid resultsGrid = new Grid(result.size() + 2, 3);
+			resultsGrid.setBorderWidth(1);
+			resultsGrid.setText(0, 0, testSuiteName);
+			resultsGrid.setText(1, 0, "Test");
+			resultsGrid.setText(1, 1, "Result");
+			resultsGrid.setText(1, 2, "Duration");
+			resultsGrids.put(testSuiteName, resultsGrid);
+			dialogVPanel.add(resultsGrid);
+
+			testingService.runTests(testSuiteName, accessKeyField.getText(), secretKeyField.getText(), new RunTestsAsyncCallback());
 		}
 	}
 	
@@ -242,9 +246,22 @@ public class Test implements EntryPoint {
 			dialogBox.center();
 			closeButton.setFocus(true);
 		}
-
+		
 		@Override
 		public void onSuccess(AWSTestResultSet result) {
+			testsReturned += result.getNumberOfTests();
+			Grid resultsGrid = resultsGrids.get(result.suite);
+			Iterator<String> it = result.getTests().iterator();
+			for (int i = 0; i < result.getNumberOfTests(); i++) {
+				String test = it.next();
+				resultsGrid.setText(i + 2, 0, test);
+				resultsGrid.setText(i + 2, 1, result.getResult(test).code.toString());
+				resultsGrid.setText(i + 2, 2, result.getResult(test).time + " ms.");
+			}
+			if (testsReturned == totalTests) {
+				dialogVPanel.add(closeButton);
+				closeButton.setFocus(true);
+			}
 		}
 	}
 }

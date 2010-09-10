@@ -9,6 +9,14 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 public class AWSTestResultSet implements IsSerializable {
 	private Map<String, AWSTestResult> resultSet = new HashMap<String, AWSTestResult>();
+	public String suite;
+	
+	/** Default no-args constructor to satisfy GWT */
+	public AWSTestResultSet() { }
+	
+	public AWSTestResultSet(String suiteName) {
+		suite = suiteName;
+	}
 	
 	public int getNumberOfTests() {
 		return resultSet.size();

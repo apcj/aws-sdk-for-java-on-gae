@@ -13,7 +13,7 @@ import com.amazonaws.gae.test.shared.awsunit.AWSTestResult;
 import com.amazonaws.gae.test.shared.awsunit.AWSTestResultSet;
 
 public abstract class AWSTestSuite {
-	protected Map<String, AWSTest> tests;
+	protected List<AWSTest> tests;
 	protected AWSClientPool clientPool;
 	
 	protected String name;
@@ -21,6 +21,7 @@ public abstract class AWSTestSuite {
 	@SuppressWarnings("serial")
 	private static final Map<String, AWSTestSuite> singletons = new HashMap<String, AWSTestSuite>() {{
 		put(AmazonSimpleDBTestSuite.getInstance().getName(), AmazonSimpleDBTestSuite.getInstance());
+		put(AmazonSQSTestSuite.getInstance().getName(), AmazonSQSTestSuite.getInstance());
 	}};
 	
 	public static AWSTestSuite getTestSuite(String testSuiteName) {
@@ -32,7 +33,7 @@ public abstract class AWSTestSuite {
 	}
 	
 	protected AWSTestSuite() {
-		tests = new HashMap<String, AWSTest>();
+		tests = new LinkedList<AWSTest>();
 	}
 	
 	public String getName() {
@@ -40,7 +41,7 @@ public abstract class AWSTestSuite {
 	}
 	
 	public List<AWSTest> getTests() {
-		return new LinkedList<AWSTest>(tests.values());
+		return tests;
 	}
 	
 	abstract void setUp();
@@ -49,8 +50,8 @@ public abstract class AWSTestSuite {
 		clientPool = AWSClientPool.getClientPool(credentials);
 		setUp();
 		
-		AWSTestResultSet resultSet = new AWSTestResultSet();
-		for (AWSTest test : tests.values()) {
+		AWSTestResultSet resultSet = new AWSTestResultSet(name);
+		for (AWSTest test : tests) {
 			resultSet.addTestResult(test, test.execute());
 		}
 		
@@ -61,7 +62,7 @@ public abstract class AWSTestSuite {
 		clientPool = AWSClientPool.getClientPool(credentials);
 		setUp();
 		
-		return tests.get(testName).execute();
+		return tests.get(tests.indexOf(testName)).execute();
 	}
 	
 }

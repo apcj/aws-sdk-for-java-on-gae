@@ -6,7 +6,6 @@ import java.util.Set;
 
 import com.amazonaws.gae.test.client.TestListingService;
 import com.amazonaws.gae.test.server.awsunit.AWSTestSuite;
-import com.amazonaws.gae.test.server.awsunit.AmazonSimpleDBTestSuite;
 import com.amazonaws.gae.test.shared.awsunit.AWSTest;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -16,7 +15,7 @@ public class TestListingServiceImpl extends RemoteServiceServlet implements Test
 	@Override
 	public List<String> listTests(String testSuiteName) {
 		List<String> listNames = new LinkedList<String>();
-		for (AWSTest test : AmazonSimpleDBTestSuite.getInstance().getTests()) {
+		for (AWSTest test : AWSTestSuite.getTestSuite(testSuiteName).getTests()) {
 			listNames.add(test.getName());
 		}
 		

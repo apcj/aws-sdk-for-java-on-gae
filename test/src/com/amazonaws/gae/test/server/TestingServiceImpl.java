@@ -4,7 +4,6 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.gae.test.client.TestingService;
 import com.amazonaws.gae.test.server.awsunit.AWSTestSuite;
-import com.amazonaws.gae.test.server.awsunit.AmazonSimpleDBTestSuite;
 import com.amazonaws.gae.test.shared.FieldVerifier;
 import com.amazonaws.gae.test.shared.awsunit.AWSTestResult;
 import com.amazonaws.gae.test.shared.awsunit.AWSTestResultSet;
@@ -27,11 +26,11 @@ public class TestingServiceImpl extends RemoteServiceServlet implements
 		}
 		AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
 		
-		AmazonSimpleDBTestSuite sdbTestSuite = AmazonSimpleDBTestSuite.getInstance();
+		AWSTestSuite testSuite = AWSTestSuite.getTestSuite(testSuiteName);
 		
-		AWSTestResultSet sdbResultSet = sdbTestSuite.runTests(credentials);
+		AWSTestResultSet resultSet = testSuite.runTests(credentials);
 		
-		return sdbResultSet;
+		return resultSet;
 	}
 	
 	public AWSTestResult runTest(String testSuiteName, String testName, String accessKey, String secretKey) throws IllegalArgumentException {

@@ -56,7 +56,6 @@ public class Test implements EntryPoint {
 	Label errorLabel;
 	DialogBox dialogBox;
 	Button closeButton;
-	Label textToServerLabel;
 	HTML serverResponseLabel;
 	VerticalPanel dialogVPanel;
 	Map<String, Grid> resultsGrids;
@@ -97,15 +96,10 @@ public class Test implements EntryPoint {
 		closeButton = new Button("Close");
 		// We can set the id of a widget by accessing its Element
 		closeButton.getElement().setId("closeButton");
-		textToServerLabel = new Label();
 		serverResponseLabel = new HTML();
 		dialogVPanel = new VerticalPanel();
 		dialogVPanel.addStyleName("dialogVPanel");
-		dialogVPanel.add(new HTML("<b>Sending keys to the server:</b>"));
-		dialogVPanel.add(textToServerLabel);
-		dialogVPanel.add(new HTML("<br><b>Results:</b>"));
-		dialogVPanel.add(serverResponseLabel);
-		dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
+		dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_LEFT);
 		dialogBox.setWidget(dialogVPanel);
 
 		// Add a handler to close the DialogBox
@@ -150,8 +144,6 @@ public class Test implements EntryPoint {
 
 				// Then, we send the input to the server.
 				testButton.setEnabled(false);
-				textToServerLabel.setText("Access Key: " + accessKey + " || " + "Secret Key: " + secretKey);
-				serverResponseLabel.setText("");
 				
 				testListingService.listTestSuites(new ListTestSuitesAsyncCallback());
 			}
@@ -205,7 +197,7 @@ public class Test implements EntryPoint {
 		public void onSuccess(List<String> result) {
 			totalTests += result.size();
 			Grid resultsGrid = new Grid(result.size() + 2, 3);
-			resultsGrid.setBorderWidth(1);
+			resultsGrid.setBorderWidth(0);
 			resultsGrid.setText(0, 0, testSuiteName);
 			resultsGrid.setText(1, 0, "Test");
 			resultsGrid.setText(1, 1, "Result");
@@ -231,7 +223,7 @@ public class Test implements EntryPoint {
 
 		@Override
 		public void onSuccess(AWSTestResult result) {
-			serverResponseLabel.setHTML(serverResponseLabel.getHTML() + "SUCCESS<br>");
+			//serverResponseLabel.setHTML(serverResponseLabel.getHTML() + "SUCCESS<br>");
 		}
 		
 	}

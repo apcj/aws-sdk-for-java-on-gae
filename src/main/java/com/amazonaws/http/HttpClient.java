@@ -67,7 +67,6 @@ public class HttpClient {
      * useful for end users (ex: HTTP client configuration, etc).
      */
     private static final Log log = LogFactory.getLog(HttpClient.class);
-
     private static final Log unmarshallerPerformanceLog = LogFactory.getLog("com.amazonaws.unmarshaller.performance");
 
     /** Internal client for sending HTTP requests */
@@ -547,7 +546,6 @@ public class HttpClient {
         if (!(userAgent.equals(ClientConfiguration.DEFAULT_USER_AGENT))) {
             userAgent += ", " + ClientConfiguration.DEFAULT_USER_AGENT;
         }
-        userAgent += "-" + VersionInfoUtils.getVersion();
 
         /* Set HTTP client parameters */
         HttpClientParams httpClientParams = new HttpClientParams();

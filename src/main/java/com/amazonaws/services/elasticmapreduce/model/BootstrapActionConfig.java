@@ -25,7 +25,8 @@ public class BootstrapActionConfig {
      * The name of the bootstrap action.
      * <p>
      * <b>Constraints:</b><br/>
-     * <b>Length: </b>1 - 256<br/>
+     * <b>Length: </b>0 - 256<br/>
+     * <b>Pattern: </b>[\u0020-\uD7FF\uE000-\uFFFD\uD800\uDC00-\uDBFF\uDFFF\r\n\t]*<br/>
      */
     private String name;
 
@@ -35,10 +36,30 @@ public class BootstrapActionConfig {
     private ScriptBootstrapActionConfig scriptBootstrapAction;
 
     /**
+     * Default constructor for a new BootstrapActionConfig object.  Callers should use the
+     * setter or fluent setter (with...) methods to initialize this object after creating it.
+     */
+    public BootstrapActionConfig() {}
+    
+    /**
+     * Constructs a new BootstrapActionConfig object.
+     * Callers should use the setter or fluent setter (with...) methods to
+     * initialize any additional object members.
+     * 
+     * @param name The name of the bootstrap action.
+     * @param scriptBootstrapAction The script run by the bootstrap action.
+     */
+    public BootstrapActionConfig(String name, ScriptBootstrapActionConfig scriptBootstrapAction) {
+        this.name = name;
+        this.scriptBootstrapAction = scriptBootstrapAction;
+    }
+    
+    /**
      * The name of the bootstrap action.
      * <p>
      * <b>Constraints:</b><br/>
-     * <b>Length: </b>1 - 256<br/>
+     * <b>Length: </b>0 - 256<br/>
+     * <b>Pattern: </b>[\u0020-\uD7FF\uE000-\uFFFD\uD800\uDC00-\uDBFF\uDFFF\r\n\t]*<br/>
      *
      * @return The name of the bootstrap action.
      */
@@ -50,7 +71,8 @@ public class BootstrapActionConfig {
      * The name of the bootstrap action.
      * <p>
      * <b>Constraints:</b><br/>
-     * <b>Length: </b>1 - 256<br/>
+     * <b>Length: </b>0 - 256<br/>
+     * <b>Pattern: </b>[\u0020-\uD7FF\uE000-\uFFFD\uD800\uDC00-\uDBFF\uDFFF\r\n\t]*<br/>
      *
      * @param name The name of the bootstrap action.
      */
@@ -64,7 +86,8 @@ public class BootstrapActionConfig {
      * Returns a reference to this object so that method calls can be chained together.
      * <p>
      * <b>Constraints:</b><br/>
-     * <b>Length: </b>1 - 256<br/>
+     * <b>Length: </b>0 - 256<br/>
+     * <b>Pattern: </b>[\u0020-\uD7FF\uE000-\uFFFD\uD800\uDC00-\uDBFF\uDFFF\r\n\t]*<br/>
      *
      * @param name The name of the bootstrap action.
      *

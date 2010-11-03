@@ -33,7 +33,7 @@ public class AmazonSimpleDBTestSuite extends AWSTestSuite {
 	
 	@Override
 	void setUp() {
-		if (sdb == null) sdb = clientPool.getAmazonSimpleDBClient();
+		sdb = clientPool.getAmazonSimpleDBClient();
 	}
 
 	class ListDomainsTest extends AWSTest {

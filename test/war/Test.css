@@ -40,6 +40,12 @@ h1 {
 }
 
 .titleRow {
+  background-color: #e0f0ff;
+  border-top: 1px solid black;
+}
+
+.durationColumn {
+  text-align: right;	
 }
 
 /** Set ids using widget.getElement().setId("idOfElement") */

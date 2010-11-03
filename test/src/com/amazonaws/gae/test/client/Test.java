@@ -212,6 +212,8 @@ public class Test implements EntryPoint {
 			resultsGrid.getFlexCellFormatter().setWidth(1, 0, "250px");
 			resultsGrid.setText(1, 1, "Result");
 			resultsGrid.setText(1, 2, "Duration");
+			resultsGrid.getFlexCellFormatter().addStyleName(1, 2, "durationColumn");
+			resultsGrid.getFlexCellFormatter().setWidth(1, 2, "70px");
 			resultsGrids.put(testSuiteName, resultsGrid);
 			dialogVPanel.add(resultsGrid);
 
@@ -266,6 +268,7 @@ public class Test implements EntryPoint {
 				    + "\"\\>"));
 				resultsGrid.getFlexCellFormatter().setHorizontalAlignment(i + 2, 1, HasHorizontalAlignment.ALIGN_CENTER);
 				resultsGrid.setText(i + 2, 2, result.getResult(test).time + " ms.");
+				resultsGrid.getFlexCellFormatter().addStyleName(i + 2, 2, "durationColumn");
 			}
 			if (testsReturned == totalTests) {
 				dialogVPanel.add(closeButton);

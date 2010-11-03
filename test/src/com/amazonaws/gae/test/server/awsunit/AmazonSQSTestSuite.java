@@ -40,7 +40,7 @@ public class AmazonSQSTestSuite extends AWSTestSuite {
 	
 	@Override
 	void setUp() {
-		if (sqs == null) sqs = clientPool.getAmazonSQSClient();
+		sqs = clientPool.getAmazonSQSClient();
 	}
 	
 	class CreateQueueTest extends AWSTest {

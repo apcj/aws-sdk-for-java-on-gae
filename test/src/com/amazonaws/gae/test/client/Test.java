@@ -262,10 +262,10 @@ public class Test implements EntryPoint {
 				resultsGrid.addCell(i + 2); resultsGrid.addCell(i + 2); resultsGrid.addCell(i + 2);
 				resultsGrid.setText(i + 2, 0, test);
 				resultsGrid.setHTML(i + 2, 1, "<img src=\"" + 
-				    (result.getResult(test).code.toString().equals("SUCCESS") 
-				        ? "http://status.aws.amazon.com/images/status0.gif" 
-				        : "http://status.aws.amazon.com/images/status3.gif"
-				    + "\"\\>"));
+				    (result.getResult(test).code.toString().equals("SUCCESS")
+				        ? "/img/status0.gif" 
+				        : "/img/status3.gif")
+				    + "\"\\>");
 				resultsGrid.getFlexCellFormatter().setHorizontalAlignment(i + 2, 1, HasHorizontalAlignment.ALIGN_CENTER);
 				resultsGrid.setText(i + 2, 2, result.getResult(test).time + " ms.");
 				resultsGrid.getFlexCellFormatter().addStyleName(i + 2, 2, "durationColumn");

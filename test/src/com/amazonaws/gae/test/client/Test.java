@@ -165,6 +165,7 @@ public class Test implements EntryPoint {
 			serverResponseLabel.addStyleName("serverResponseLabelError");
 			serverResponseLabel.setHTML(SERVER_ERROR);
 			dialogBox.center();
+			dialogVPanel.add(closeButton);
 			closeButton.setFocus(true);
 		}
 
@@ -192,6 +193,7 @@ public class Test implements EntryPoint {
 			serverResponseLabel.addStyleName("serverResponseLabelError");
 			serverResponseLabel.setHTML(SERVER_ERROR);
 			dialogBox.center();
+			dialogVPanel.add(closeButton);
 			closeButton.setFocus(true);
 		}
 
@@ -230,6 +232,7 @@ public class Test implements EntryPoint {
 			serverResponseLabel.addStyleName("serverResponseLabelError");
 			serverResponseLabel.setHTML(SERVER_ERROR);
 			dialogBox.center();
+			dialogVPanel.add(closeButton);
 			closeButton.setFocus(true);
 		}
 
@@ -248,6 +251,7 @@ public class Test implements EntryPoint {
 			serverResponseLabel.addStyleName("serverResponseLabelError");
 			serverResponseLabel.setHTML(SERVER_ERROR);
 			dialogBox.center();
+			dialogVPanel.add(closeButton);
 			closeButton.setFocus(true);
 		}
 		

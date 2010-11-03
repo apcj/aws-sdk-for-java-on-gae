@@ -19,8 +19,9 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -58,7 +59,7 @@ public class Test implements EntryPoint {
 	Button closeButton;
 	HTML serverResponseLabel;
 	VerticalPanel dialogVPanel;
-	Map<String, Grid> resultsGrids;
+	Map<String, FlexTable> resultsGrids;
 	volatile int testsReturned = 0;
 	volatile int totalTests = 0;
 
@@ -73,7 +74,7 @@ public class Test implements EntryPoint {
 		secretKeyField = new TextBox();
 		secretKeyField.setText("Secret Key");
 		errorLabel = new Label();
-		resultsGrids = new HashMap<String, Grid>();
+		resultsGrids = new HashMap<String, FlexTable>();
 
 		// We can add style names to widgets
 		testButton.addStyleName("sendButton");
@@ -106,6 +107,7 @@ public class Test implements EntryPoint {
 		closeButton.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				dialogBox.hide();
+				dialogVPanel.clear();
 				testButton.setEnabled(true);
 				testButton.setFocus(true);
 			}
@@ -196,10 +198,18 @@ public class Test implements EntryPoint {
 		@Override
 		public void onSuccess(List<String> result) {
 			totalTests += result.size();
-			Grid resultsGrid = new Grid(result.size() + 2, 3);
-			resultsGrid.setBorderWidth(0);
-			resultsGrid.setText(0, 0, testSuiteName);
+			FlexTable resultsGrid = new FlexTable();
+			resultsGrid.addStyleName("resultsGrid");
+			resultsGrid.insertRow(0);
+			resultsGrid.getRowFormatter().addStyleName(0, "titleRow");
+			resultsGrid.addCell(0);
+			resultsGrid.getFlexCellFormatter().setColSpan(0, 0, 3);
+			resultsGrid.setHTML(0, 0, "<b>" + testSuiteName + "</b>");
+			resultsGrid.insertRow(1);
+			resultsGrid.getRowFormatter().addStyleName(1, "headerRow");
+			resultsGrid.addCell(1); resultsGrid.addCell(1); resultsGrid.addCell(1);
 			resultsGrid.setText(1, 0, "Test");
+			resultsGrid.getFlexCellFormatter().setWidth(1, 0, "250px");
 			resultsGrid.setText(1, 1, "Result");
 			resultsGrid.setText(1, 2, "Duration");
 			resultsGrids.put(testSuiteName, resultsGrid);
@@ -242,12 +252,19 @@ public class Test implements EntryPoint {
 		@Override
 		public void onSuccess(AWSTestResultSet result) {
 			testsReturned += result.getNumberOfTests();
-			Grid resultsGrid = resultsGrids.get(result.suite);
+			FlexTable resultsGrid = resultsGrids.get(result.suite);
 			Iterator<String> it = result.getTests().iterator();
 			for (int i = 0; i < result.getNumberOfTests(); i++) {
 				String test = it.next();
+				resultsGrid.insertRow(i + 2);
+				resultsGrid.addCell(i + 2); resultsGrid.addCell(i + 2); resultsGrid.addCell(i + 2);
 				resultsGrid.setText(i + 2, 0, test);
-				resultsGrid.setText(i + 2, 1, result.getResult(test).code.toString());
+				resultsGrid.setHTML(i + 2, 1, "<img src=\"" + 
+				    (result.getResult(test).code.toString().equals("SUCCESS") 
+				        ? "http://status.aws.amazon.com/images/status0.gif" 
+				        : "http://status.aws.amazon.com/images/status3.gif"
+				    + "\"\\>"));
+				resultsGrid.getFlexCellFormatter().setHorizontalAlignment(i + 2, 1, HasHorizontalAlignment.ALIGN_CENTER);
 				resultsGrid.setText(i + 2, 2, result.getResult(test).time + " ms.");
 			}
 			if (testsReturned == totalTests) {
